@@ -47,7 +47,30 @@ function startPrompt() {
         q.viewAllByDepartments();
         break;
       case "Add Employee":
-        
+        prompt([
+          {
+            type: "input",
+            name: "firstName",
+            message: "What is the employee's first name ",
+          },
+          {
+            type: "input",
+            name: "lastName",
+            message: "What is the employee's last name ",
+          },
+          {
+            type: "list",
+            name: "newbieRole",
+            message: "What is the employee's role? ",
+            choices: q.getRoles(),
+          },
+          {
+            name: "manager",
+            type: "list",
+            message: "Who is the Employee's manager?",
+            choices: q.getManagers(),
+          },
+        ]).then((res) => q.addEmployee(res));
         break;
       case "Remove Employee":
         break;
@@ -66,6 +89,6 @@ function startPrompt() {
       case "Exit the Application":
         return db.end();
     }
-    setTimeout(startPrompt, 1000);
+    startPrompt();
   });
 }
