@@ -1,7 +1,8 @@
 const db = require("./db/connection");
 const { prompt } = require("inquirer");
 const { table } = require("console.table");
-const query = require("./lib/query");
+const Query = require("./lib/query");
+const q = new Query();
 
 // Start server after DB connection
 db.connect((err) => {
@@ -31,9 +32,40 @@ function startPrompt() {
         "Remove Role",
         "Add Department",
         "Remove Department",
+        "Exit the Application",
       ],
     },
-  ]);
+  ]).then((picked) => {
+    switch (picked.choice) {
+      case "View All Employees":
+        q.viewAllEmployees();
+        break;
+      case "View Employees By Manager":
+        q.viewAllByManagers();
+        break;
+      case "View Employees By Department":
+        q.viewAllByDepartments();
+        break;
+      case "Add Employee":
+        
+        break;
+      case "Remove Employee":
+        break;
+      case "Update Employee Role":
+        break;
+      case "Update Employee Manager":
+        break;
+      case "Add Role":
+        break;
+      case "Remove Role":
+        break;
+      case "Add Department":
+        break;
+      case "Remove Department":
+        break;
+      case "Exit the Application":
+        return db.end();
+    }
+    setTimeout(startPrompt, 1000);
+  });
 }
-
-
