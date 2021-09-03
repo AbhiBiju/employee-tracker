@@ -189,7 +189,16 @@ function startPrompt() {
           });
         break;
       case "Add Role":
-        q.addRole().then(() => {
+        let deptsArr = [];
+        q.findAllDepartments().then(([rows]) => {
+          let depts = rows;
+          const deptChoices = depts.map(({ id, title }) => ({
+            name: title,
+            value: id,
+          }));
+          deptsArr = deptChoices;
+        });
+        q.addRole(deptsArr).then(() => {
           console.log("\nSuccessfully Added Role!\n");
           startPrompt();
         });
@@ -217,16 +226,16 @@ function startPrompt() {
         });
         break;
       case "Remove Department":
-        let deptsArr = [];
+        let deptsArr2 = [];
         q.findAllDepartments().then(([rows]) => {
           let depts = rows;
           const deptChoices = depts.map(({ id, title }) => ({
             name: title,
             value: id,
           }));
-          deptsArr = deptChoices;
+          deptsArr2 = deptChoices;
         }).then(()=>{
-          q.removeDept(deptsArr).then(()=>{
+          q.removeDept(deptsArr2).then(()=>{
             console.log("\nSuccessfully Removed Department!\n");
             startPrompt();
           })
