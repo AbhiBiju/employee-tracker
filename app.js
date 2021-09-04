@@ -40,213 +40,146 @@ function startPrompt() {
       ],
     },
   ]).then((picked) => {
-    switch (picked.choice) {
-      case "View All Employees":
-        q.findAllEmployees().then(([res]) => {
-          console.table(res);
-          startPrompt();
-        });
-        break;
-      case "View All Managers":
-        q.findAllManagers().then(([rows]) => {
-          console.table(rows);
-          startPrompt();
-        });
-        break;
-      case "View All Departments":
-        q.findAllDepartments().then(([rows]) => {
-          console.table(rows);
-          startPrompt();
-        });
-        break;
-      case "View All Roles":
-        q.findAllRoles().then(([rows]) => {
-          console.table(rows);
-          startPrompt();
-        });
-        break;
-      case "View Employees By Role":
-        q.viewAllByRole().then(([rows]) => {
-          console.table(rows);
-          startPrompt();
-        });
-        break;
-      case "View Employees By Manager":
-        q.viewAllByManagers().then(([res]) => {
-          console.table(res);
-          startPrompt();
-        });
-        break;
-      case "View Employees By Department":
-        q.viewAllByDepartments().then(([res]) => {
-          console.table(res);
-          startPrompt();
-        });
-        break;
-      case "Add Employee":
-        let rolesArr = [];
-        let managersArr = [];
+    let rolesArr = [];
+    let employeesArr = [];
+    let managersArr = [];
+    let deptsArr = [];
 
-        q.findAllRoles().then(([rolesRows]) => {
-          let roles = rolesRows;
-          const roleChoices = roles.map(({ id, title }) => ({
-            name: title,
-            value: id,
-          }));
-          rolesArr = roleChoices;
-        });
+    q.findAllRoles().then(([rolesRows]) => {
+      let roles = rolesRows;
+      const roleChoices = roles.map(({ id, title }) => ({
+        name: title,
+        value: id,
+      }));
+      rolesArr = roleChoices;
+    });
 
-        q.findAllManagers()
-          .then(([managerRows]) => {
-            let managers = managerRows;
-            const managerChoices = managers.map(({ id, first_name, last_name }) => ({
-              name: `${first_name} ${last_name}`,
-              value: id,
-            }));
-            managersArr = managerChoices;
-          })
-          .then(() => {
+    q.findAllManagers().then(([managerRows]) => {
+      let managers = managerRows;
+      const managerChoices = managers.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+      managersArr = managerChoices;
+    });
+
+    q.findAllEmployees().then(([rows]) => {
+      let employees = rows;
+      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+      employeesArr = employeeChoices;
+    });
+
+    q.findAllDepartments()
+      .then(([rows]) => {
+        let depts = rows;
+        const deptChoices = depts.map(({ id, title }) => ({
+          name: title,
+          value: id,
+        }));
+        deptsArr = deptChoices;
+      })
+      .then(() => {
+        switch (picked.choice) {
+          case "View All Employees":
+            q.findAllEmployees().then(([res]) => {
+              console.table(res);
+              startPrompt();
+            });
+            break;
+          case "View All Managers":
+            q.findAllManagers().then(([rows]) => {
+              console.table(rows);
+              startPrompt();
+            });
+            break;
+          case "View All Departments":
+            q.findAllDepartments().then(([rows]) => {
+              console.table(rows);
+              startPrompt();
+            });
+            break;
+          case "View All Roles":
+            q.findAllRoles().then(([rows]) => {
+              console.table(rows);
+              startPrompt();
+            });
+            break;
+          case "View Employees By Role":
+            q.viewAllByRole().then(([rows]) => {
+              console.table(rows);
+              startPrompt();
+            });
+            break;
+          case "View Employees By Manager":
+            q.viewAllByManagers().then(([res]) => {
+              console.table(res);
+              startPrompt();
+            });
+            break;
+          case "View Employees By Department":
+            q.viewAllByDepartments().then(([res]) => {
+              console.table(res);
+              startPrompt();
+            });
+            break;
+          case "Add Employee":
             q.addEmployee(rolesArr, managersArr).then(() => {
               console.log("\nSuccessfully Added New Employee!\n");
               startPrompt();
             });
-          });
-        break;
-      case "Remove Employee":
-        let employeesArr = [];
 
-        q.findAllEmployees()
-          .then(([rows]) => {
-            let employees = rows;
-            const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-              name: `${first_name} ${last_name}`,
-              value: id,
-            }));
-            employeesArr = employeeChoices;
-          })
-          .then(() => {
+            break;
+          case "Remove Employee":
             q.removeEmployee(employeesArr).then(() => {
               console.log("\nSuccessfully Removed Employee!\n");
               startPrompt();
             });
-          });
-        break;
-      case "Update Employee Role":
-        let rolesArr2 = [];
-        let employeesArr2 = [];
 
-        q.findAllRoles().then(([rolesRows]) => {
-          let roles = rolesRows;
-          const roleChoices = roles.map(({ id, title }) => ({
-            name: title,
-            value: id,
-          }));
-          rolesArr2 = roleChoices;
-        });
-        q.findAllEmployees()
-          .then(([rows]) => {
-            let employees = rows;
-            const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-              name: `${first_name} ${last_name}`,
-              value: id,
-            }));
-            employeesArr2 = employeeChoices;
-          })
-          .then(() => {
-            q.updateEmployeeRole(rolesArr2, employeesArr2).then(() => {
+            break;
+          case "Update Employee Role":
+            q.updateEmployeeRole(rolesArr, employeesArr).then(() => {
               console.log("\nSuccessfully Updated Employee Role!\n");
               startPrompt();
             });
-          });
-        break;
-      case "Update Employee Manager":
-        let managersArr2 = [];
-        let employeesArr3 = [];
 
-        q.findAllEmployees().then(([rows]) => {
-          let employees = rows;
-          const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-            name: `${first_name} ${last_name}`,
-            value: id,
-          }));
-          employeesArr3 = employeeChoices;
-        });
-
-        q.findAllManagers()
-          .then(([managerRows]) => {
-            let managers = managerRows;
-            const managerChoices = managers.map(({ id, first_name, last_name }) => ({
-              name: `${first_name} ${last_name}`,
-              value: id,
-            }));
-            managersArr2 = managerChoices;
-          })
-          .then(() => {
-            q.updateEmployeeManager(employeesArr3, managersArr2).then(() => {
+            break;
+          case "Update Employee Manager":
+            q.updateEmployeeManager(employeesArr, managersArr).then(() => {
               console.log("\nSuccessfully Updated Employee Manager!\n");
               startPrompt();
             });
-          });
-        break;
-      case "Add Role":
-        let deptsArr = [];
-        q.findAllDepartments().then(([rows]) => {
-          let depts = rows;
-          const deptChoices = depts.map(({ id, title }) => ({
-            name: title,
-            value: id,
-          }));
-          deptsArr = deptChoices;
-        });
-        q.addRole(deptsArr).then(() => {
-          console.log("\nSuccessfully Added Role!\n");
-          startPrompt();
-        });
-        break;
-      case "Remove Role":
-        let rolesArr3 = [];
-        q.findAllRoles()
-          .then(([rolesRows]) => {
-            let roles = rolesRows;
-            const roleChoices = roles.map(({ id, title }) => ({
-              name: title,
-              value: id,
-            }));
-            rolesArr3 = roleChoices;
-          })
-          .then(() => {
-            q.removeRole(rolesArr3).then(() => {
+
+            break;
+          case "Add Role":
+            q.addRole(deptsArr).then(() => {
+              console.log("\nSuccessfully Added Role!\n");
+              startPrompt();
+            });
+            break;
+          case "Remove Role":
+            q.removeRole(rolesArr).then(() => {
               console.log("\nSuccessfully Removed Role!\n");
               startPrompt();
             });
-          });
-        break;
-      case "Add Department":
-        q.addDepartment().then(() => {
-          console.log("\nSuccessfully Added Department!\n");
-          startPrompt();
-        });
-        break;
-      case "Remove Department":
-        let deptsArr2 = [];
-        q.findAllDepartments()
-          .then(([rows]) => {
-            let depts = rows;
-            const deptChoices = depts.map(({ id, title }) => ({
-              name: title,
-              value: id,
-            }));
-            deptsArr2 = deptChoices;
-          })
-          .then(() => {
-            q.removeDept(deptsArr2).then(() => {
+            break;
+          case "Add Department":
+            q.addDepartment().then(() => {
+              console.log("\nSuccessfully Added Department!\n");
+              startPrompt();
+            });
+            break;
+          case "Remove Department":
+            q.removeDept(deptsArr).then(() => {
               console.log("\nSuccessfully Removed Department!\n");
               startPrompt();
             });
-          });
-        break;
-      case "Exit the Application":
-        return db.end();
-    }
+            break;
+          case "Exit the Application":
+            return db.end();
+        }
+      });
   });
 }
