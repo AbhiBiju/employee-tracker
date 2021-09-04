@@ -1,6 +1,6 @@
 const db = require("./db/connection");
 const { prompt } = require("inquirer");
-const { table } = require("console.table");
+const cTable = require("console.table");
 const Query = require("./lib/query");
 const q = new Query();
 
@@ -205,19 +205,21 @@ function startPrompt() {
         break;
       case "Remove Role":
         let rolesArr3 = [];
-        q.findAllRoles().then(([rolesRows]) => {
-          let roles = rolesRows;
-          const roleChoices = roles.map(({ id, title }) => ({
-            name: title,
-            value: id,
-          }));
-          rolesArr3 = roleChoices;
-        }).then(()=>{
-          q.removeRole(rolesArr3).then(()=>{
-            console.log("\nSuccessfully Removed Role!\n");
-            startPrompt();
+        q.findAllRoles()
+          .then(([rolesRows]) => {
+            let roles = rolesRows;
+            const roleChoices = roles.map(({ id, title }) => ({
+              name: title,
+              value: id,
+            }));
+            rolesArr3 = roleChoices;
           })
-        });
+          .then(() => {
+            q.removeRole(rolesArr3).then(() => {
+              console.log("\nSuccessfully Removed Role!\n");
+              startPrompt();
+            });
+          });
         break;
       case "Add Department":
         q.addDepartment().then(() => {
@@ -227,19 +229,21 @@ function startPrompt() {
         break;
       case "Remove Department":
         let deptsArr2 = [];
-        q.findAllDepartments().then(([rows]) => {
-          let depts = rows;
-          const deptChoices = depts.map(({ id, title }) => ({
-            name: title,
-            value: id,
-          }));
-          deptsArr2 = deptChoices;
-        }).then(()=>{
-          q.removeDept(deptsArr2).then(()=>{
-            console.log("\nSuccessfully Removed Department!\n");
-            startPrompt();
+        q.findAllDepartments()
+          .then(([rows]) => {
+            let depts = rows;
+            const deptChoices = depts.map(({ id, title }) => ({
+              name: title,
+              value: id,
+            }));
+            deptsArr2 = deptChoices;
           })
-        });
+          .then(() => {
+            q.removeDept(deptsArr2).then(() => {
+              console.log("\nSuccessfully Removed Department!\n");
+              startPrompt();
+            });
+          });
         break;
       case "Exit the Application":
         return db.end();
