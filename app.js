@@ -2,18 +2,24 @@ const db = require("./db/connection");
 const { prompt } = require("inquirer");
 const cTable = require("console.table");
 const Query = require("./lib/query");
+const chalk = require("chalk-animation");
 const q = new Query();
 
 // Start server after DB connection
 db.connect((err) => {
   if (err) throw err;
-  console.log("Database connected.");
-  startPrompt();
+  console.log("Database connected.\n");
+  console.log("Loading...");
+  chalk.karaoke(
+    " _____                   _                           \n|  ___|                 | |                          \n| |__  _ __ ___   _ __  | |  ___   _   _   ___   ___ \n|  __|| '_ ` _ \\ | '_ \\ | | / _ \\ | | | | / _ \\ / _ \\\n| |___| | | | | || |_) || || (_) || |_| ||  __/|  __/\n\\____/|_| |_| |_|| .__/ |_| \\___/  \\__, | \\___| \\___|\n___  ___         | |                __/ |            \n|  \\/  |         |_|               |___/             \n| .  . |  __ _  _ __    __ _   __ _   ___  _ __      \n| |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '__|     \n| |  | || (_| || | | || (_| || (_| ||  __/| |        \n\\_|  |_/ \\__,_||_| |_| \\__,_| \\__, | \\___||_|        \n                               __/ |                 \n                              |___/                  "
+  );
+
+  setTimeout(() => {
+    console.log("Done!\n");
+    startPrompt();
+  }, 3900);
 });
 
-console.log(
-  " _____                   _                           \n|  ___|                 | |                          \n| |__  _ __ ___   _ __  | |  ___   _   _   ___   ___ \n|  __|| '_ ` _ \\ | '_ \\ | | / _ \\ | | | | / _ \\ / _ \\\n| |___| | | | | || |_) || || (_) || |_| ||  __/|  __/\n\\____/|_| |_| |_|| .__/ |_| \\___/  \\__, | \\___| \\___|\n___  ___         | |                __/ |            \n|  \\/  |         |_|               |___/             \n| .  . |  __ _  _ __    __ _   __ _   ___  _ __      \n| |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '__|     \n| |  | || (_| || | | || (_| || (_| ||  __/| |        \n\\_|  |_/ \\__,_||_| |_| \\__,_| \\__, | \\___||_|        \n                               __/ |                 \n                              |___/                  "
-);
 function startPrompt() {
   prompt([
     {
@@ -75,8 +81,8 @@ function startPrompt() {
     q.findAllDepartments()
       .then(([rows]) => {
         let depts = rows;
-        const deptChoices = depts.map(({ id, title }) => ({
-          name: title,
+        const deptChoices = depts.map(({ id, name }) => ({
+          name: name,
           value: id,
         }));
         deptsArr = deptChoices;
@@ -130,28 +136,24 @@ function startPrompt() {
               console.log("\nSuccessfully Added New Employee!\n");
               startPrompt();
             });
-
             break;
           case "Remove Employee":
             q.removeEmployee(employeesArr).then(() => {
               console.log("\nSuccessfully Removed Employee!\n");
               startPrompt();
             });
-
             break;
           case "Update Employee Role":
             q.updateEmployeeRole(rolesArr, employeesArr).then(() => {
               console.log("\nSuccessfully Updated Employee Role!\n");
               startPrompt();
             });
-
             break;
           case "Update Employee Manager":
             q.updateEmployeeManager(employeesArr, managersArr).then(() => {
               console.log("\nSuccessfully Updated Employee Manager!\n");
               startPrompt();
             });
-
             break;
           case "Add Role":
             q.addRole(deptsArr).then(() => {
