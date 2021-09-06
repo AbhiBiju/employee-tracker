@@ -34,6 +34,12 @@ To run this application, use the following command:
 npm start
 ```
 
+Here is a video walkthrough on how to install and use the app:
+
+`https://user-images.githubusercontent.com/83188832/132159706-fb0a0175-9b31-4870-b1d0-773f045f4d6a.mp4`
+
+https://user-images.githubusercontent.com/83188832/132159706-fb0a0175-9b31-4870-b1d0-773f045f4d6a.mp4
+
 ## License
 
 This project is licensed under the [MIT](https://opensource.org/licenses/MIT) License
